@@ -1,7 +1,7 @@
 {
-  "name": "track-recorder",
-  "version": "2.0.2",
-  "description": "Application to record and export drags.",
+  "name": "pointer-logger",
+  "version": "0.1.0",
+  "description": "Application to record and export pointer movements.",
   "main": "build",
   "scripts": {
     "start": "webpack-dev-server --define process.env.NODE_ENV=\"'development'\" --config ./build-config/webpack.dev.js --progress",

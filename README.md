@@ -1,6 +1,8 @@
-# Track-Recorder
+# Pointer Logger
 
-A small web application to draw 2D strokes and export them as csv files.
+A small web application to track and log every pointer movements and export them as csv files.
+
+This is a fork of [Track Recorder](https://github.com/QuentinRoy/Track-Recorder).
 
 ## Install
 

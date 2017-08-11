@@ -4,7 +4,7 @@
   .footer
     .info
       h1.title
-        | Track Recorder
+        | Pointer Logger
         |
         span.version
           | {{ version ? ` v${version}` : '' }}

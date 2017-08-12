@@ -10,7 +10,7 @@ div.pointer-area(
   @touchend.prevent="onPointerEvent"
   @touchcancel.prevent="onPointerEvent"
 )
-  strokes-canvas.canvas(ref="canvas" :track="track")
+  strokes-canvas.canvas(ref="canvas" :strokes="strokes")
 </template>
 
 <script>
@@ -19,7 +19,7 @@ import StrokesCanvas from './StrokesCanvas.vue';
 
 export default {
   props: {
-    track: { type: Array, default: () => [] },
+    strokes: { type: Array, default: () => [] },
     startTime: { type: Number }
   },
   data: () => ({

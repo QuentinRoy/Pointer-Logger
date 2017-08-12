@@ -1,6 +1,6 @@
 <template lang="pug">
 .main
-  pointer-area.canvas(:track="movements" @move="onPointerMove")
+  pointer-area.canvas(:strokes="strokes" @move="onPointerMove")
   .footer
     .info
       h1.title
@@ -34,24 +34,24 @@ const csvStringify = promisify(csvStringifyCb.bind());
 
 export default {
   data: () => ({
-    movements: [],
+    strokes: [],
     version: APP_VERSION
   }),
   computed: {
     empty() {
-      return !this.movements.length;
+      return !this.strokes.length;
     }
   },
   methods: {
     async exportTrack() {
-      const csvStr = await csvStringify(this.movements, { header: true });
+      const csvStr = await csvStringify(this.strokes, { header: true });
       download(csvStr, 'track.csv', 'text/csv');
     },
     clearTrack() {
-      this.movements = [];
+      this.strokes = [];
     },
     onPointerMove(evt) {
-      this.movements.push(evt);
+      this.strokes.push(evt);
     }
   },
   components: { FlatButton, PointerArea }

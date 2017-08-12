@@ -9,7 +9,7 @@ const devicePixelRatio = window.devicePixelRatio || 1;
 
 export default {
   props: {
-    track: { type: Array, default: () => [] }
+    strokes: { type: Array, default: () => [] }
   },
   data: () => ({
     rect: undefined
@@ -64,7 +64,7 @@ export default {
 
       // Draw the strokes.
       ctx.beginPath();
-      this.track.forEach((e, i) => {
+      this.strokes.forEach((e, i) => {
         if (e.type === 'start' || e.type === 'in' || i === 0) {
           ctx.moveTo(e.x, this.rect.height - e.y);
         } else if (e.active && e.type === 'move' || e.type === 'end' && e.x != null) {
@@ -76,7 +76,7 @@ export default {
     }
   },
   watch: {
-    track() {
+    strokes() {
       this.repaint();
     }
   }

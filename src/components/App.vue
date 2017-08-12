@@ -42,7 +42,6 @@ export default {
       return !this.movements.length;
     }
   },
-  components: { FlatButton, PointerArea },
   methods: {
     async exportTrack() {
       const csvStr = await csvStringify(this.movements, { header: true });
@@ -54,7 +53,8 @@ export default {
     onPointerMove(evt) {
       this.movements.push(evt);
     }
-  }
+  },
+  components: { FlatButton, PointerArea }
 };
 </script>
 

@@ -33,10 +33,12 @@ const getPointerEventXY = (evt, device, type) => {
   throw new Error(`Cannot get location for event from unsupported device "${device}"`);
 };
 
-const getPointerEventActive = (evt, device) =>
-  // If the primary button is pressed, evt.buttons % 2 is 1.
-  (device === 'mouse' && evt.buttons % 2 === 1) ||
-  (device === 'touch' && evt.touches.length > 0);
+const getPointerEventActive = (evt, device, type, wasActive) =>
+  (device === 'touch' && evt.touches.length > 0) ||
+  (device === 'mouse' && (
+    type === 'move' && wasActive
+    || type === 'start'
+  ));
 
 const getPointerEventPointerCount = (evt, device, _, active) => {
   if (device === 'touch') {
@@ -47,10 +49,11 @@ const getPointerEventPointerCount = (evt, device, _, active) => {
 
 const createPointerEventRecord = (
   evt,
+  wasActive,
   { left = 0, top = 0, height = 0 } = {}
 ) => {
   const { type, device } = EVENT_MAP[evt.type];
-  const active = getPointerEventActive(evt, device);
+  const active = getPointerEventActive(evt, device, type, wasActive);
   const pos = getPointerEventXY(evt, device, type, active);
   return {
     type,

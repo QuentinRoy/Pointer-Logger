@@ -27,7 +27,11 @@ export default {
   }),
   methods: {
     onPointerEvent(evt) {
-      const record = createPointerEventRecord(evt, this.$refs.canvas.rect);
+      const record = createPointerEventRecord(
+        evt,
+        this.active,
+        this.$refs.canvas.rect
+      );
       this.active = record.active;
       this.$emit('move', record);
     }

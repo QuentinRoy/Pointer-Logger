@@ -1,7 +1,8 @@
 const EVENT_MAP = {
   mousedown: { type: 'start', device: 'mouse' },
   mouseup: { type: 'end', device: 'mouse' },
-  mouseout: { type: 'end', device: 'mouse' },
+  mouseout: { type: 'out', device: 'mouse' },
+  mouseover: { type: 'in', device: 'mouse' },
   mousemove: { type: 'move', device: 'mouse' },
   touchstart: { type: 'start', device: 'touch' },
   touchmove: { type: 'move', device: 'touch' },
@@ -9,29 +10,39 @@ const EVENT_MAP = {
   touchcancel: { type: 'end', device: 'touch' }
 };
 
-const map = (context, ...args) =>
-  Array.prototype.map.apply(context, args);
+const map = (context, ...args) => Array.prototype.map.apply(context, args);
 
 // Get the mean value of a list of number
 const mean = list =>
   Array.prototype.reduce.call(list, (sum, x) => sum + x, 0) / list.length;
 
 const getPointerEventXY = (evt, device, type) => {
-  if (type === 'end') return null;
-  return device === 'mouse' ? {
-    x: evt.clientX,
-    y: evt.clientY
-  } : {
-    x: mean(map(evt.touches, t => t.clientX)),
-    y: mean(map(evt.touches, t => t.clientY))
-  };
+  if (device === 'mouse') {
+    return {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+  } else if (device === 'touch') {
+    return type === 'end'
+      ? null
+      : {
+        x: mean(map(evt.touches, t => t.clientX)),
+        y: mean(map(evt.touches, t => t.clientY))
+      };
+  }
+  throw new Error(`Cannot get location for event from unsupported device "${device}"`);
 };
 
-const getPointerEventPointerCount = (evt, device) => {
+const getPointerEventActive = (evt, device) =>
+  // If the primary button is pressed, evt.buttons % 2 is 1.
+  (device === 'mouse' && evt.buttons % 2 === 1) ||
+  (device === 'touch' && evt.touches.length > 0);
+
+const getPointerEventPointerCount = (evt, device, _, active) => {
   if (device === 'touch') {
     return evt.touches.length;
   }
-  return 1;
+  return active ? 1 : 0;
 };
 
 const createPointerEventRecord = (
@@ -39,15 +50,16 @@ const createPointerEventRecord = (
   { left = 0, top = 0, height = 0 } = {}
 ) => {
   const { type, device } = EVENT_MAP[evt.type];
-  const pos = getPointerEventXY(evt, device, type);
+  const active = getPointerEventActive(evt, device);
+  const pos = getPointerEventXY(evt, device, type, active);
   return {
     type,
     x: pos ? pos.x - left : null,
     // Transform y origin to be at the bottom instead of the top.
     y: pos ? height - pos.y + top : null,
-    // active,
+    active,
     device,
-    pointerCount: getPointerEventPointerCount(evt, device),
+    pointerCount: getPointerEventPointerCount(evt, device, type, active),
     timeStamp: evt.timeStamp
   };
 };

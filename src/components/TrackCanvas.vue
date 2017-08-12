@@ -44,6 +44,7 @@ export default {
       }
       // Init the paint.
       this.repaintNow();
+      this.$emit('resize', this.rect);
     }),
     repaint: rafThrottle(function repaint() {
       this.repaintNow();
@@ -64,11 +65,10 @@ export default {
       // Draw the strokes.
       ctx.beginPath();
       this.track.forEach((e, i) => {
-        const pos = [e.x, this.rect.height - e.y];
-        if (e.type === 'start' || i === 0) {
-          ctx.moveTo(...pos);
-        } else if (e.type !== 'end') {
-          ctx.lineTo(...pos);
+        if (e.type === 'start' || e.type === 'in' || i === 0) {
+          ctx.moveTo(e.x, this.rect.height - e.y);
+        } else if (e.active && e.type === 'move' || e.type === 'end' && e.x != null) {
+          ctx.lineTo(e.x, this.rect.height - e.y);
         }
       });
       ctx.stroke();
@@ -82,9 +82,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.canvas {
-  cursor: crosshair;
-}
-</style>

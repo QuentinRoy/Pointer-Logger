@@ -4,6 +4,7 @@ div.pointer-area(
   @mousemove.prevent="onPointerEvent"
   @mouseup.prevent="onPointerEvent"
   @mouseout.prevent="onPointerEvent"
+  @mouseover.prevent="onPointerEvent"
   @touchstart.prevent="onPointerEvent"
   @touchmove.prevent="onPointerEvent"
   @touchend.prevent="onPointerEvent"
@@ -26,15 +27,9 @@ export default {
   }),
   methods: {
     onPointerEvent(evt) {
-      const wasActive = this.active;
-      this.active =
-        (evt.type === 'mousedown') ||
-        (evt.type === 'mousemove' && this.active) ||
-        (evt.type.startsWith('touch') && evt.touches.length > 0);
-      if (this.active || wasActive) {
-        const record = createPointerEventRecord(evt, this.$refs.canvas.rect);
-        this.$emit('drag', record);
-      }
+      const record = createPointerEventRecord(evt, this.$refs.canvas.rect);
+      this.active = record.active;
+      this.$emit('move', record);
     }
   },
   components: { TrackCanvas }
@@ -45,7 +40,6 @@ export default {
 .pointer-area {
   display: flex;
 }
-
 .canvas {
   flex-grow: 1;
 }

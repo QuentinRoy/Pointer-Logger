@@ -1,6 +1,6 @@
 <template lang="pug">
 .main
-  pointer-area.canvas(:track="track" @drag="onDrag")
+  pointer-area.canvas(:track="movements" @move="onPointerMove")
   .footer
     .info
       h1.title
@@ -32,34 +32,27 @@ import PointerArea from './PointerArea.vue';
 // Use bind as a workaround for an error on safari when applying promisify directly on csvStringify.
 const csvStringify = promisify(csvStringifyCb.bind());
 
-const normalizeTimeStamps = track => {
-  if (track.length === 0) return track;
-  const start = track[0].timeStamp;
-  return track.map(e => Object.assign({}, e, { timeStamp: e.timeStamp - start }));
-};
-
 export default {
   data: () => ({
-    track: [],
+    movements: [],
     version: APP_VERSION
   }),
   computed: {
     empty() {
-      return !this.track.length;
+      return !this.movements.length;
     }
   },
   components: { FlatButton, PointerArea },
   methods: {
     async exportTrack() {
-      const normalizedTrack = normalizeTimeStamps(this.track);
-      const csvStr = await csvStringify(normalizedTrack, { header: true });
+      const csvStr = await csvStringify(this.movements, { header: true });
       download(csvStr, 'track.csv', 'text/csv');
     },
     clearTrack() {
-      this.track = [];
+      this.movements = [];
     },
-    onDrag(evt) {
-      this.track.push(evt);
+    onPointerMove(evt) {
+      this.movements.push(evt);
     }
   }
 };

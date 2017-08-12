@@ -9,6 +9,7 @@ div.pointer-area(
   @touchmove.prevent="onPointerEvent"
   @touchend.prevent="onPointerEvent"
   @touchcancel.prevent="onPointerEvent"
+  :style="backgroundImage ? { 'background-image': `url('${backgroundImage}')` } : null"
 )
   strokes-canvas.canvas(ref="canvas" :strokes="strokes")
 </template>
@@ -20,7 +21,8 @@ import StrokesCanvas from './StrokesCanvas.vue';
 export default {
   props: {
     strokes: { type: Array, default: () => [] },
-    startTime: { type: Number }
+    startTime: { type: Number },
+    backgroundImage: { type: String }
   },
   data: () => ({
     active: false
@@ -43,6 +45,9 @@ export default {
 <style lang="scss" scoped>
 .pointer-area {
   display: flex;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
 }
 .canvas {
   flex-grow: 1;

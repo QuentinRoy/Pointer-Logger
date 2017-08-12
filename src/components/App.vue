@@ -1,6 +1,10 @@
 <template lang="pug">
 .main
-  pointer-area.canvas(:strokes="drawnStrokes" @move="onPointerMove")
+  pointer-area.canvas(
+    :strokes="drawnStrokes"
+    :backgroundImage="image"
+    @move="onPointerMove"
+  )
   .footer
     .info
       h1.title
@@ -14,10 +18,19 @@
       )
         img.github-logo(src="./github.svg" alt="github")
     .controls
+      flat-button.button(@click="askImage" :disabled='loadingImage')
+        | {{ loadingImage ? 'Loading...' : (image ? 'Change Background' : 'Select Background') }}
       flat-button.button(@click="clearTrack" :disabled='empty')
         | Clear
       flat-button.button(@click="exportTrack" :disabled='empty')
         | Export
+    input.hidden-file-input(
+      type='file'
+      ref="imageFileInput"
+      :multiple="false"
+      accept="image/*"
+      @change.prevent="imageFileChange"
+    )
 </template>
 
 <script>
@@ -38,7 +51,9 @@ export default {
     currentStroke: undefined,
     drawAll: false,
     logInactive: true,
-    version: APP_VERSION
+    version: APP_VERSION,
+    loadingImage: false,
+    image: undefined
   }),
   computed: {
     empty() {
@@ -71,6 +86,21 @@ export default {
     clearTrack() {
       this.strokes = [];
       this.currentStroke = undefined;
+    },
+    askImage() {
+      this.$refs.imageFileInput.click();
+    },
+    imageFileChange() {
+      this.loadingImage = true;
+      const reader = new FileReader();
+      reader.addEventListener('load', () => {
+        this.image = reader.result;
+        this.loadingImage = false;
+      }, false);
+      reader.addEventListener('error', () => {
+        this.loadingImage = false;
+      });
+      reader.readAsDataURL(this.$refs.imageFileInput.files[0]);
     },
     onPointerMove(record) {
       if (
@@ -174,6 +204,10 @@ $info-hovered-github-opacity: $info-title-opacity;
     .button {
       margin: 0 .2em;
     }
+  }
+
+  .hidden-file-input {
+    display: none;
   }
 }
 </style>

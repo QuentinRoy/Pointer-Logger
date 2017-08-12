@@ -10,12 +10,12 @@ div.pointer-area(
   @touchend.prevent="onPointerEvent"
   @touchcancel.prevent="onPointerEvent"
 )
-  track-canvas.canvas(ref="canvas" :track="track")
+  strokes-canvas.canvas(ref="canvas" :track="track")
 </template>
 
 <script>
 import createPointerEventRecord from '../pointer-event-record';
-import TrackCanvas from './TrackCanvas.vue';
+import StrokesCanvas from './StrokesCanvas.vue';
 
 export default {
   props: {
@@ -32,7 +32,7 @@ export default {
       this.$emit('move', record);
     }
   },
-  components: { TrackCanvas }
+  components: { StrokesCanvas }
 };
 </script>
 

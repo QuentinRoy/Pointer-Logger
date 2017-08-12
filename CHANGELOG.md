@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/QuentinRoy/Pointer-Logger/compare/v1.1.0...v1.2.0) (2017-08-12)
+
+
+### Bug Fixes
+
+* Fix number of pointers for the mouse. ([8108ceb](https://github.com/QuentinRoy/Pointer-Logger/commit/8108ceb))
+
+
+### Features
+
+* Add logger fields. ([857b742](https://github.com/QuentinRoy/Pointer-Logger/commit/857b742))
+* Change the name of the downloaded file. ([dc9645d](https://github.com/QuentinRoy/Pointer-Logger/commit/dc9645d))
+
+
+
 <a name="1.1.0"></a>
 # [1.1.0](https://github.com/QuentinRoy/Pointer-Logger/compare/v1.0.1...v1.1.0) (2017-08-12)
 

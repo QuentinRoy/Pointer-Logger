@@ -64,20 +64,25 @@ export default {
 
       // Draw the strokes.
       ctx.beginPath();
-      this.strokes.forEach((e, i) => {
-        if (e.type === 'start' || e.type === 'in' || i === 0) {
-          ctx.moveTo(e.x, this.rect.height - e.y);
-        } else if (e.active && e.type === 'move' || e.type === 'end' && e.x != null) {
-          ctx.lineTo(e.x, this.rect.height - e.y);
-        }
-      });
+      this.strokes
+        .filter(t => t.active)
+        .forEach(s => {
+          s.movements.forEach((e, i) => {
+            if (i === 0) {
+              ctx.moveTo(e.x, this.rect.height - e.y);
+            } else if (e.x !== null && e.y !== null) {
+              ctx.lineTo(e.x, this.rect.height - e.y);
+            }
+          });
+        });
       ctx.stroke();
       ctx.restore();
     }
   },
   watch: {
-    strokes() {
-      this.repaint();
+    strokes: {
+      handler: 'repaint',
+      deep: true
     }
   }
 };

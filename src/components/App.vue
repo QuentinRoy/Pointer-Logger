@@ -1,6 +1,6 @@
 <template lang="pug">
 .main
-  pointer-area.canvas(:strokes="strokes" @move="onPointerMove")
+  pointer-area.canvas(:strokes="drawnStrokes" @move="onPointerMove")
   .footer
     .info
       h1.title
@@ -35,23 +35,59 @@ const csvStringify = promisify(csvStringifyCb.bind());
 export default {
   data: () => ({
     strokes: [],
+    currentStroke: undefined,
+    drawAll: false,
+    logInactive: true,
     version: APP_VERSION
   }),
   computed: {
     empty() {
-      return !this.strokes.length;
+      return !this.strokes.length ||
+        (!this.logInactive && this.strokes.every(s => !s.active));
+    },
+    drawnStrokes() {
+      if (this.empty) return [];
+      if (this.drawAll) {
+        return this.strokes;
+      }
+      return this.currentStroke ? [this.currentStroke] : [];
     }
   },
   methods: {
     async exportTrack() {
-      const csvStr = await csvStringify(this.strokes, { header: true });
+      // Concat the record movements of all strokes.
+      const movements = (
+        this.logInactive
+          ? this.strokes
+          : this.strokes.filter(s => s.active)
+      )
+        .map(s => s.movements)
+        .reduce((acc, stroke) => acc.concat(stroke));
+      // Convert them to csv.
+      const csvStr = await csvStringify(movements, { header: true });
+      // Trigger the "download".
       download(csvStr, 'track.csv', 'text/csv');
     },
     clearTrack() {
       this.strokes = [];
+      this.currentStroke = undefined;
     },
-    onPointerMove(evt) {
-      this.strokes.push(evt);
+    onPointerMove(record) {
+      if (
+        !this.currentStroke ||
+        !this.currentStroke.active && record.active
+      ) {
+        this.currentStroke = {
+          active: record.active,
+          movements: [record]
+        };
+        this.strokes.push(this.currentStroke);
+      } else {
+        this.currentStroke.movements.push(record);
+        if (record.type === 'end' || record.type === 'out') {
+          this.currentStroke = undefined;
+        }
+      }
     }
   },
   components: { FlatButton, PointerArea }

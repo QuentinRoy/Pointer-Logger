@@ -81,7 +81,7 @@ export default {
       // Convert them to csv.
       const csvStr = await csvStringify(movements, { header: true });
       // Trigger the "download".
-      download(csvStr, 'track.csv', 'text/csv');
+      download(csvStr, 'pointer.csv', 'text/csv');
     },
     clearTrack() {
       this.strokes = [];

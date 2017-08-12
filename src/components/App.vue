@@ -96,7 +96,7 @@ export default {
 
 <style lang="scss" scoped>
 $controls-bg: #C7C5C5;
-$shadow-color: rgba(0, 0, 0, .3);
+$shadow-color: #2C2C2C;
 $controls-title-color: darken($controls-bg, 30%);
 
 $logo-height: 1.4em;
@@ -117,7 +117,7 @@ $info-hovered-github-opacity: $info-title-opacity;
     align-items: center;
     background-color: $controls-bg;
     bottom: 0;
-    box-shadow: 0 0 8px -2px $shadow-color;
+    box-shadow: 0px 10px 8px 10px $shadow-color;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;

@@ -40,11 +40,13 @@ const getPointerEventActive = (evt, device, type, wasActive) =>
     || type === 'start'
   ));
 
-const getPointerEventPointerCount = (evt, device, _, active) => {
+const getPointerEventPointerCount = (evt, device) => {
   if (device === 'touch') {
     return evt.touches.length;
+  } else if (device === 'mouse') {
+    return 1;
   }
-  return active ? 1 : 0;
+  throw new Error(`Cannot get pointer count for event from unsupported device "${device}"`);
 };
 
 const createPointerEventRecord = (

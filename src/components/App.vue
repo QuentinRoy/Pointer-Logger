@@ -77,7 +77,12 @@ export default {
           : this.strokes.filter(s => s.active)
       )
         .map(s => s.movements)
-        .reduce((acc, stroke) => acc.concat(stroke));
+        .reduce((acc, stroke) => acc.concat(stroke))
+        .map(r => Object.assign(
+          {},
+          r,
+          { logger: 'Pointer Logger', loggerVersion: APP_VERSION }
+        ));
       // Convert them to csv.
       const csvStr = await csvStringify(movements, { header: true });
       // Trigger the "download".

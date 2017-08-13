@@ -8,7 +8,7 @@
   .footer
     .info
       h1.title
-        | Pointer Logger
+        | {{ name }}
         |
         span.version
           | {{ version ? ` v${version}` : '' }}
@@ -57,6 +57,7 @@ export default {
     logInactive: true,
     version: APP_VERSION,
     repositoryURL: REPOSITORY_URL,
+    name: 'Pointer Logger',
     loadingImage: false,
     image: undefined,
     resamplingRate: 15
@@ -87,7 +88,7 @@ export default {
         .map(r => Object.assign(
           {},
           r,
-          { logger: 'Pointer Logger', loggerVersion: this.version }
+          { logger: this.name, loggerVersion: this.version }
         ));
       const exportedStrokes = resampleStrokes
         ? resample(movements, this.resamplingRate)

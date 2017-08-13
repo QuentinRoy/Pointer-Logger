@@ -38,7 +38,7 @@ export const segment = movements =>
  */
 export const resampleTimeStamps = (movements, samplingRate) =>
   range(
-    Math.floor(first(movements).timeStamp),
+    Math.ceil(first(movements).timeStamp),
     last(movements).timeStamp + samplingRate,
     samplingRate
   );

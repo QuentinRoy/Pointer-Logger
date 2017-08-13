@@ -4,10 +4,18 @@ const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const parseGithubURL = require('parse-github-url');
+const gitRev = require('git-rev-sync');
 const hasNodeDepModules = require('./has-node-dep-modules');
 const packageConfig = require('../package.json');
 
 const resolve = relPath => path.resolve(__dirname, relPath);
+const getDirtyness = () => {
+  try {
+    return gitRev.isTagDirty() ? '-dirty' : '';
+  } catch (e) {
+    return '-unchecked';
+  }
+};
 
 module.exports = {
   entry: {
@@ -82,7 +90,7 @@ module.exports = {
       template: 'index.html'
     }),
     new webpack.DefinePlugin({
-      APP_VERSION: JSON.stringify(packageConfig.version),
+      APP_VERSION: JSON.stringify(`${packageConfig.version}${getDirtyness()}`),
       REPOSITORY_URL: JSON.stringify(
         (() => {
           const repo = packageConfig.repository;

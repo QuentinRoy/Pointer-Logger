@@ -13,7 +13,8 @@
         span.version
           | {{ version ? ` v${version}` : '' }}
       a.github-link(
-        href="https://github.com/QuentinRoy/Track-Recorder"
+        v-if="repositoryURL"
+        :href="repositoryURL"
         title="Github repository of the project"
       )
         img.github-logo(src="./github.svg" alt="github")
@@ -34,7 +35,7 @@
 </template>
 
 <script>
-/* global APP_VERSION */
+/* global APP_VERSION, REPOSITORY_URL */
 
 import promisify from 'util.promisify';
 import download from 'downloadjs';
@@ -52,6 +53,7 @@ export default {
     drawAll: false,
     logInactive: true,
     version: APP_VERSION,
+    repositoryURL: REPOSITORY_URL,
     loadingImage: false,
     image: undefined
   }),

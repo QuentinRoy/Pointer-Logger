@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const parseGithubURL = require('parse-github-url');
 const hasNodeDepModules = require('./has-node-dep-modules');
 const packageConfig = require('../package.json');
 
@@ -81,7 +82,15 @@ module.exports = {
       template: 'index.html'
     }),
     new webpack.DefinePlugin({
-      APP_VERSION: JSON.stringify(packageConfig.version)
+      APP_VERSION: JSON.stringify(packageConfig.version),
+      REPOSITORY_URL: JSON.stringify(
+        (() => {
+          const repo = packageConfig.repository;
+          if (!repo) throw new Error("Cannot find the project's repository");
+          const parsed = parseGithubURL(repo.url || repo);
+          return `https://github.com/${parsed.repository}`;
+        })()
+      )
     })
   ]
 };

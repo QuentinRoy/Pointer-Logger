@@ -130,14 +130,13 @@ export default (movements, samplingRate) => {
   const timeStamps = resampleTimeStamps(movements, samplingRate);
   // Create a list of segments from the movement records
   const segments = segment(movements).map(([start, end]) => ({ start, end }));
-  const res = (
+  return (
     // Create a list of segments from the movement records associated with the new timeStamps
     // They should have.
     mapSegmentTimeStamps(segments, timeStamps)
       // Forward the empty segments to make sure we do not miss an important event.
       .reduce((acc, seg) => {
         const prev = last(acc);
-        console.log(prev, seg);
         return prev && prev.timeStamps.length === 0
           ? [...acc.slice(0, acc.length - 1), forwardMissedSegment(prev, seg)]
           : [...acc, seg];
@@ -151,5 +150,4 @@ export default (movements, samplingRate) => {
         Object.assign({}, last(segments).end, { timeStamp: last(timeStamps) })
       ])
   );
-  return res;
 };

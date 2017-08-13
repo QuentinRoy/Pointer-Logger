@@ -118,28 +118,40 @@ export default {
     imageFileChange() {
       this.loadingImage = true;
       const reader = new FileReader();
+      const file = this.$refs.imageFileInput.files[0];
       reader.addEventListener('load', () => {
-        this.image = reader.result;
+        this.imageURL = reader.result;
+        this.imageName = file.name;
         this.loadingImage = false;
       }, false);
       reader.addEventListener('error', () => {
         this.loadingImage = false;
       });
-      reader.readAsDataURL(this.$refs.imageFileInput.files[0]);
+      reader.readAsDataURL(file);
     },
-    onPointerMove(record) {
+    onPointerMove(record_) {
+      // Append the current background image to the record.
+      const record = Object.assign(
+        {},
+        record_,
+        { backgroundImage: this.imageName }
+      );
       if (
         !this.currentStroke ||
         !this.currentStroke.active && record.active
       ) {
+        // If there is no ongoing current stroke or this stroke wasn't active while the new record
+        // is, create a new stroke.
         this.currentStroke = {
           active: record.active,
           movements: [record]
         };
         this.strokes.push(this.currentStroke);
       } else {
+        // Else, push a new record to the current stroke.
         this.currentStroke.movements.push(record);
         if (record.type === 'end' || record.type === 'out') {
+          // If the current stroke is done, it is not the current stroke anymore.
           this.currentStroke = undefined;
         }
       }

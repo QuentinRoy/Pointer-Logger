@@ -23,8 +23,10 @@
         | {{ loadingImage ? 'Loading...' : (image ? 'Change Background' : 'Select Background') }}
       flat-button.button(@click="clearTrack" :disabled='empty')
         | Clear
-      flat-button.button(@click="exportTrack" :disabled='empty')
+      flat-button.button(@click="exportTrack(false)" :disabled='empty')
         | Export
+      flat-button.button(@click="exportTrack(true)" :disabled='empty')
+        | Export resampled
     input.hidden-file-input(
       type='file'
       ref="imageFileInput"
@@ -42,6 +44,7 @@ import download from 'downloadjs';
 import csvStringifyCb from 'csv-stringify';
 import FlatButton from './FlatButton.vue';
 import PointerArea from './PointerArea.vue';
+import resample from '../resample';
 
 // Use bind as a workaround for an error on safari when applying promisify directly on csvStringify.
 const csvStringify = promisify(csvStringifyCb.bind());
@@ -55,7 +58,8 @@ export default {
     version: APP_VERSION,
     repositoryURL: REPOSITORY_URL,
     loadingImage: false,
-    image: undefined
+    image: undefined,
+    resamplingRate: 15
   }),
   computed: {
     empty() {
@@ -71,7 +75,7 @@ export default {
     }
   },
   methods: {
-    async exportTrack() {
+    async exportTrack(resampleStrokes = false) {
       // Concat the record movements of all strokes.
       const movements = (
         this.logInactive
@@ -83,10 +87,13 @@ export default {
         .map(r => Object.assign(
           {},
           r,
-          { logger: 'Pointer Logger', loggerVersion: APP_VERSION }
+          { logger: 'Pointer Logger', loggerVersion: this.version }
         ));
+      const exportedStrokes = resampleStrokes
+        ? resample(movements, this.resamplingRate)
+        : movements;
       // Convert them to csv.
-      const csvStr = await csvStringify(movements, { header: true });
+      const csvStr = await csvStringify(exportedStrokes, { header: true });
       // Trigger the "download".
       download(csvStr, 'pointer.csv', 'text/csv');
     },
@@ -133,9 +140,8 @@ export default {
 
 <style lang="scss" scoped>
 $footer-bg: #D9D7D9;
-$footer-shadow-color: rgba(0,0,0,.4);
+$footer-shadow-color: rgba(0, 0, 0, .4);
 // $footer-border-color: ;
-
 $logo-height: 1.4em;
 $info-title-opacity: .5;
 $info-github-opacity: .25;

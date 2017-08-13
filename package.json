@@ -66,6 +66,7 @@
   "dependencies": {
     "csv-stringify": "^1.0.4",
     "downloadjs": "^1.4.7",
+    "lodash": "^4.17.4",
     "raf-throttle": "^2.0.3",
     "util.promisify": "^1.0.0",
     "vue": "^2.4.2"

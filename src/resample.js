@@ -18,7 +18,7 @@ import range from 'lodash/range';
  * @typedef Segment
  * @property {Record} start
  * @property {Record} end
- * @property {number[]} [timeStamps]
+ * @property {number[]} [timeStamps] - The expected time stamps that happen during this segment.
  */
 
 /**
@@ -32,8 +32,8 @@ export const segment = movements =>
   zip(movements.slice(0, movements.length - 1), movements.slice(1));
 
 /**
- * @param {Record[]} movements A list of movement records.
- * @param {number} samplingRate The rate of the sampling.
+ * @param {Record[]} movements - A list of movement records.
+ * @param {number} samplingRate - The rate of the sampling.
  * @return {Array<number>} The record timeStamps that are expected upon re-sampling of `movements`.
  */
 export const resampleTimeStamps = (movements, samplingRate) =>
@@ -44,8 +44,8 @@ export const resampleTimeStamps = (movements, samplingRate) =>
   );
 
 /**
- * @param {Segment[]} segments A list of segments.
- * @param {number} timeStamps The expected record timeStamps.
+ * @param {Segment[]} segments - A list of segments.
+ * @param {number} timeStamps - The expected record timeStamps.
  * @return {Segment[]} A new list of new segments with the timeStamps set up.
  */
 export const mapSegmentTimeStamps = (segments, timeStamps) => {
@@ -62,9 +62,9 @@ export const mapSegmentTimeStamps = (segments, timeStamps) => {
 };
 
 /**
- * @param {number} pointTimeStamp The timeStamp of a point.
- * @param {Record} start The start of the segment.
- * @param {Record} end The end of the segment.
+ * @param {number} pointTimeStamp T- he timeStamp of a point.
+ * @param {Record} start - The start of the segment.
+ * @param {Record} end - The end of the segment.
  * @return {{ x: number, y:number }} The coordinates of the point on the segment at
  * `pointTimeStamp`.
  */
@@ -82,8 +82,8 @@ export const interpolatePointOnSegment = (pointTimeStamp, start, end) => {
  * be more meaningful than the following one. In this case, though we preserve the next record's
  * position, we make sure we forward the type.
  *
- * @param {Record} missed The record that has been missed
- * @param {Record} next The following record.
+ * @param {Record} missed - The record that has been missed.
+ * @param {Record} next - The following record.
  * @return {Record} A new record that should take the place of `next`.
  */
 const forwardMissedRecord = (missed, next) => {
@@ -98,8 +98,8 @@ const forwardMissedRecord = (missed, next) => {
 /**
  * Make sure the information of a missed segment gets carried away to the next.
  *
- * @param {Segment} missed The missed segment
- * @param {Segment} next The following segment
+ * @param {Segment} missed - The missed segment.
+ * @param {Segment} next - The following segment.ß
  * @return {Segment} The new segment.
  */
 const forwardMissedSegment = (missed, next) =>
@@ -109,7 +109,7 @@ const forwardMissedSegment = (missed, next) =>
   });
 
 /**
- * @param {Segment} segment The segment to resample.
+ * @param {Segment} segment - The segment to resample.
  * @return {Record[]} The list of record corresponding to the resampled segment.
  */
 export const resampleSegment = ({ start: segStart, end, timeStamps }) => {
@@ -124,6 +124,12 @@ export const resampleSegment = ({ start: segStart, end, timeStamps }) => {
   });
 };
 
+/**
+ * Resample movement records.
+ * @param {Record[]} movements - A list of records.
+ * @param {number} samplingRate - The expected sampling rate.
+ * @return {Record[]} The resampled records.
+ */
 export default (movements, samplingRate) => {
   if (movements.length < 2 || !samplingRate) return movements.slice();
   // Create the list of the timeStamps associated with the new record to create.

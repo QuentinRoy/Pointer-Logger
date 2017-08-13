@@ -70,6 +70,8 @@ export default {
           s.movements.forEach((e, i) => {
             if (i === 0) {
               ctx.moveTo(e.x, this.rect.height - e.y);
+              // Make sure something is drawn even from strokes with only one point.
+              ctx.lineTo(e.x, this.rect.height - e.y);
             } else if (e.x !== null && e.y !== null) {
               ctx.lineTo(e.x, this.rect.height - e.y);
             }

@@ -2,7 +2,7 @@
 .main
   pointer-area.canvas(
     :strokes="drawnStrokes"
-    :backgroundImage="image"
+    :backgroundImage="backgroundImageURL"
     @move="onPointerMove"
   )
   .footer
@@ -19,8 +19,8 @@
       )
         img.github-logo(src="./github.svg" alt="github")
     .controls
-      flat-button.button(@click="askImage" :disabled='loadingImage')
-        | {{ loadingImage ? 'Loading...' : (image ? 'Change Background' : 'Select Background') }}
+      flat-button.button(@click="askBackgroundImage" :disabled='loadingBackgroundImage')
+        | {{ loadingBackgroundImage ? 'Loading...' : (backgroundImageURL ? 'Change Background' : 'Select Background') }}
       flat-button.button(@click="clearStrokes" :disabled='empty')
         | Clear
       flat-button.button(@click="exportStrokes(false)" :disabled='empty')
@@ -60,8 +60,9 @@ export default {
     resamplingRate: 15,
     strokes: [],
     currentStroke: undefined,
-    loadingImage: false,
-    image: undefined,
+    loadingBackgroundImage: false,
+    backgroundImageURL: undefined,
+    backgroundImageName: undefined
   }),
   computed: {
     empty() {
@@ -112,20 +113,20 @@ export default {
       this.strokes = [];
       this.currentStroke = undefined;
     },
-    askImage() {
+    askBackgroundImage() {
       this.$refs.imageFileInput.click();
     },
     imageFileChange() {
-      this.loadingImage = true;
+      this.loadingBackgroundImage = true;
       const reader = new FileReader();
       const file = this.$refs.imageFileInput.files[0];
       reader.addEventListener('load', () => {
-        this.imageURL = reader.result;
-        this.imageName = file.name;
-        this.loadingImage = false;
+        this.backgroundImageURL = reader.result;
+        this.backgroundImageName = file.name;
+        this.loadingBackgroundImage = false;
       }, false);
       reader.addEventListener('error', () => {
-        this.loadingImage = false;
+        this.loadingBackgroundImage = false;
       });
       reader.readAsDataURL(file);
     },
@@ -134,7 +135,7 @@ export default {
       const record = Object.assign(
         {},
         record_,
-        { backgroundImage: this.imageName }
+        { backgroundImage: this.backgroundImageName }
       );
       if (
         !this.currentStroke ||

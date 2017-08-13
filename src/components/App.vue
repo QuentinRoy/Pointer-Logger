@@ -21,11 +21,11 @@
     .controls
       flat-button.button(@click="askImage" :disabled='loadingImage')
         | {{ loadingImage ? 'Loading...' : (image ? 'Change Background' : 'Select Background') }}
-      flat-button.button(@click="clearTrack" :disabled='empty')
+      flat-button.button(@click="clearStrokes" :disabled='empty')
         | Clear
-      flat-button.button(@click="exportTrack(false)" :disabled='empty')
+      flat-button.button(@click="exportStrokes(false)" :disabled='empty')
         | Export
-      flat-button.button(@click="exportTrack(true)" :disabled='empty')
+      flat-button.button(@click="exportStrokes(true)" :disabled='empty')
         | Export resampled
     input.hidden-file-input(
       type='file'
@@ -75,7 +75,7 @@ export default {
     }
   },
   methods: {
-    async exportTrack(resampleStrokes = false) {
+    async exportStrokes(resampleStrokes = false) {
       // Concat the record movements of all strokes.
       const movements = (
         this.logInactive
@@ -97,7 +97,7 @@ export default {
       // Trigger the "download".
       download(csvStr, 'pointer.csv', 'text/csv');
     },
-    clearTrack() {
+    clearStrokes() {
       this.strokes = [];
       this.currentStroke = undefined;
     },

@@ -121,10 +121,25 @@ export const resampleSegment = ({
   const start = segStart;
   const out = start.pointerCount === 0;
   return timeStamps.map((t, i) => {
-    const position = out ? {} : interpolatePointOnSegment(t, start, end);
-    let type = 'move';
+    // Calculate the position of the record.
+    let position;
+    // If we are not out the position is interpolated.
+    if (!out) position = interpolatePointOnSegment(t, start, end);
+    // If we are out and this is the first record of the segment, copy the position from the start
+    // of the segment (no interpolation).
+    else if (i === 0) position = { x: start.x, y: start.y };
+    // Otherwise, there is not position when the pointer is out.
+    else position = { x: null, y: null };
+
+    // Infer its type.
+    let type;
+    // The first record of a segment always copy the type of the segment.
     if (i === 0) type = start.type;
+    // If we are out the type is out.
     else if (out) type = 'out';
+    // All other records are move.
+    else type = 'move';
+
     // Create and return the record.
     return Object.assign({}, start, position, {
       type,

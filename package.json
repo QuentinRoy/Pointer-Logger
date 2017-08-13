@@ -4,9 +4,10 @@
   "description": "Application to record and export pointer movements.",
   "main": "build",
   "scripts": {
-    "start": "webpack-dev-server --define process.env.NODE_ENV=\"'development'\" --config ./build-config/webpack.dev.js --progress",
+    "postinstall": "npm run build",
+    "start-dev": "webpack-dev-server --define process.env.NODE_ENV=\"'development'\" --config ./build-config/webpack.dev.js --progress",
     "build": "NODE_ENV=production webpack --config ./build-config/webpack.prod.js --progress",
-    "serve": "serve ./build",
+    "start": "serve ./build",
     "test": "NODE_ENV=test ava",
     "lint": "eslint src",
     "release": "standard-version",

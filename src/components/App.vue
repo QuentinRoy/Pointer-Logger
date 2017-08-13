@@ -51,17 +51,17 @@ const csvStringify = promisify(csvStringifyCb.bind());
 
 export default {
   data: () => ({
+    repositoryURL: REPOSITORY_URL,
+    version: APP_VERSION,
+    name: 'Pointer Logger',
+    logInactive: true,
+    drawAll: false,
+    exportId: 'strokes',
+    resamplingRate: 15,
     strokes: [],
     currentStroke: undefined,
-    drawAll: false,
-    logInactive: true,
-    version: APP_VERSION,
-    repositoryURL: REPOSITORY_URL,
-    name: 'Pointer Logger',
-    exportId: 'strokes',
     loadingImage: false,
     image: undefined,
-    resamplingRate: 15
   }),
   computed: {
     empty() {

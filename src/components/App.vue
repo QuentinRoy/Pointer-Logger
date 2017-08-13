@@ -58,6 +58,7 @@ export default {
     version: APP_VERSION,
     repositoryURL: REPOSITORY_URL,
     name: 'Pointer Logger',
+    exportId: 'strokes',
     loadingImage: false,
     image: undefined,
     resamplingRate: 15
@@ -101,7 +102,7 @@ export default {
       // Create a csv file from the strokes.
       const csvFile = new File(
         [await csvStringify(exportedStrokes, { header: true })],
-        'pointer.csv',
+        `${this.exportId}${resampleStrokes ? '-resampled' : ''}.csv`,
         { type: 'text/csv;charset=utf-8' }
       );
       // Save the file.

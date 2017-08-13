@@ -132,13 +132,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$controls-bg: #C7C5C5;
-$shadow-color: #2C2C2C;
-$controls-title-color: darken($controls-bg, 30%);
+$footer-bg: #D9D7D9;
+$footer-shadow-color: rgba(0,0,0,.4);
+// $footer-border-color: ;
 
 $logo-height: 1.4em;
-$info-title-opacity: .7;
-$info-github-opacity: .5;
+$info-title-opacity: .5;
+$info-github-opacity: .25;
 $info-hovered-github-opacity: $info-title-opacity;
 
 .main {
@@ -152,9 +152,9 @@ $info-hovered-github-opacity: $info-title-opacity;
 
   .footer {
     align-items: center;
-    background-color: $controls-bg;
+    background-color: $footer-bg;
     bottom: 0;
-    box-shadow: 0px 10px 8px 10px $shadow-color;
+    box-shadow: 0px 0px 0px 1px $footer-shadow-color;
     box-sizing: border-box;
     display: flex;
     justify-content: space-between;
@@ -167,8 +167,7 @@ $info-hovered-github-opacity: $info-title-opacity;
     align-items: center;
 
     .title {
-      font: small-caps bolder 1em 'Open Sans', sans-serif;
-      font-variant: small-caps;
+      font: 1em 'Open Sans', sans-serif;
       margin: 0 .2em;
       opacity: $info-title-opacity;
     }
@@ -176,7 +175,7 @@ $info-hovered-github-opacity: $info-title-opacity;
     .github-link {
       display: block;
       padding: 0;
-      margin: .5em .2em;
+      margin: 0 .2em 0 1em;
       text-decoration: none;
       height: $logo-height;
       opacity: $info-github-opacity;
@@ -190,8 +189,18 @@ $info-hovered-github-opacity: $info-title-opacity;
         opacity: $info-hovered-github-opacity;
       }
     }
+  }
 
-    @media(max-width: 380px) {
+  .controls {
+    display: flex;
+  }
+
+  .hidden-file-input {
+    display: none;
+  }
+
+  @media(max-width: 600px) {
+    .info {
       align-self: flex-end;
 
       .github-link {
@@ -207,14 +216,13 @@ $info-hovered-github-opacity: $info-title-opacity;
     }
   }
 
-  .controls {
-    .button {
-      margin: 0 .2em;
+  @media(max-width: 400px) {
+    .info {
+      display: none;
     }
-  }
-
-  .hidden-file-input {
-    display: none;
+    .footer {
+      justify-content: center;
+    }
   }
 }
 </style>

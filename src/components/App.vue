@@ -40,7 +40,7 @@
 /* global APP_VERSION, REPOSITORY_URL */
 
 import promisify from 'util.promisify';
-import download from 'downloadjs';
+import { saveAs } from 'file-saver';
 import csvStringifyCb from 'csv-stringify';
 import FlatButton from './FlatButton.vue';
 import PointerArea from './PointerArea.vue';
@@ -98,10 +98,14 @@ export default {
           r,
           { logger: this.name, loggerVersion: this.version }
         ));
-      // Convert the strokes to csv.
-      const csvStr = await csvStringify(exportedStrokes, { header: true });
-      // Trigger the "download".
-      download(csvStr, 'pointer.csv', 'text/csv');
+      // Create a csv file from the strokes.
+      const csvFile = new File(
+        [await csvStringify(exportedStrokes, { header: true })],
+        'pointer.csv',
+        { type: 'text/csv;charset=utf-8' }
+      );
+      // Save the file.
+      saveAs(csvFile);
     },
     clearStrokes() {
       this.strokes = [];

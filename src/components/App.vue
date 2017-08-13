@@ -10,8 +10,8 @@
       h1.title
         | {{ name }}
         |
-        span.version
-          | {{ version ? ` v${version}` : '' }}
+      span.version
+        | {{ version ? ` v${version}` : '' }}
       a.github-link(
         v-if="repositoryURL"
         :href="repositoryURL"
@@ -150,6 +150,7 @@ $footer-shadow-color: rgba(0, 0, 0, .4);
 // $footer-border-color: ;
 $logo-height: 1.4em;
 $info-title-opacity: .5;
+$version-opacity: .5;
 $info-github-opacity: .25;
 $info-hovered-github-opacity: $info-title-opacity;
 
@@ -181,13 +182,19 @@ $info-hovered-github-opacity: $info-title-opacity;
     .title {
       font: 1em 'Open Sans', sans-serif;
       margin: 0 .2em;
+      font-weight: bolder;
       opacity: $info-title-opacity;
+    }
+
+    .version {
+      font-size: .9em;
+      opacity: $version-opacity;
     }
 
     .github-link {
       display: block;
       padding: 0;
-      margin: 0 .2em 0 1em;
+      margin: 0 1em;
       text-decoration: none;
       height: $logo-height;
       opacity: $info-github-opacity;
@@ -211,24 +218,22 @@ $info-hovered-github-opacity: $info-title-opacity;
     display: none;
   }
 
-  @media(max-width: 600px) {
+  @media(max-width: 750px) {
     .info {
       align-self: flex-end;
 
-      .github-link {
+      .github-link,
+      .version {
         display: none;
       }
 
       .title {
         font-size: .7em;
-        .version {
-          display: none;
-        }
       }
     }
   }
 
-  @media(max-width: 400px) {
+  @media(max-width: 550px) {
     .info {
       display: none;
     }

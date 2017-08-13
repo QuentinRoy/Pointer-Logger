@@ -112,7 +112,12 @@ const forwardMissedSegment = (missed, next) =>
  * @param {Segment} segment - The segment to resample.
  * @return {Record[]} The list of record corresponding to the resampled segment.
  */
-export const resampleSegment = ({ start: segStart, end, timeStamps }) => {
+export const resampleSegment = ({
+  start: segStart,
+  end,
+  timeStamps,
+  index
+}) => {
   const start = segStart;
   const out = start.pointerCount === 0;
   return timeStamps.map((t, i) => {
@@ -120,7 +125,12 @@ export const resampleSegment = ({ start: segStart, end, timeStamps }) => {
     let type = 'move';
     if (i === 0) type = start.type;
     else if (out) type = 'out';
-    return Object.assign({}, start, position, { type, timeStamp: t });
+    // Create and return the record.
+    return Object.assign({}, start, position, {
+      type,
+      timeStamp: t,
+      resampledSegmentIndex: index
+    });
   });
 };
 
@@ -135,7 +145,11 @@ export default (movements, samplingRate) => {
   // Create the list of the timeStamps associated with the new record to create.
   const timeStamps = resampleTimeStamps(movements, samplingRate);
   // Create a list of segments from the movement records
-  const segments = segment(movements).map(([start, end]) => ({ start, end }));
+  const segments = segment(movements).map(([start, end], i) => ({
+    start,
+    end,
+    index: i + 1
+  }));
   return (
     // Create a list of segments from the movement records associated with the new timeStamps
     // They should have.

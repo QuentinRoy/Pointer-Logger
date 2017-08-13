@@ -84,16 +84,21 @@ export default {
           : this.strokes.filter(s => s.active)
       )
         .map(s => s.movements)
-        .reduce((acc, stroke) => acc.concat(stroke))
+        .reduce((acc, stroke) => acc.concat(stroke));
+
+      const exportedStrokes = (
+        // Resample if needed.
+        resampleStrokes
+          ? resample(movements, this.resamplingRate)
+          : movements
+      )
+        // Add the logger informations.
         .map(r => Object.assign(
           {},
           r,
           { logger: this.name, loggerVersion: this.version }
         ));
-      const exportedStrokes = resampleStrokes
-        ? resample(movements, this.resamplingRate)
-        : movements;
-      // Convert them to csv.
+      // Convert the strokes to csv.
       const csvStr = await csvStringify(exportedStrokes, { header: true });
       // Trigger the "download".
       download(csvStr, 'pointer.csv', 'text/csv');
